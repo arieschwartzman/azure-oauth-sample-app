@@ -1,0 +1,5 @@
+{
+    "auth": {
+        "redirectUri" :"http://localhost:3000/auth/azureadoauth2/callback"
+    }
+}

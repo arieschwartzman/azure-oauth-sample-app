@@ -1,0 +1,29 @@
+
+<html>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/f4f6c26907.js" crossorigin="anonymous"></script>
+    <body>
+        <div class="container" style="margin-top: 20px;">
+            <p class="lead">Welcome <%=me.displayName%> (<%= me.userPrincipalName %>)
+                <a href="/logout">Logout</a>
+            </p>
+
+            <p>
+                This NodeJS/Express sample application demonstrates authentication with a Microsoft account. The client certificate, used for the authentication, is kept in Azure Key Vault and accessed using System Managed Identity.
+                So not in any stage the certificate is exposed while configuring the application
+            </p>
+            <ul>
+                <li>                    
+                    Source code for this application can be found here <a href="https://github.com/arieschwartzman/passport-azure-ad-oauth2-clientcert#readme">                        
+                        <i style="font-size: 22;" class="fa fa-github" aria-hidden="true"></i></a>
+                </li>
+                <li>                    
+                    Passport Strategy used here can be downloaded from <a href="https://www.npmjs.com/package/passport-azure-ad-oauth2-clientcert"><i class="fab fa-npm" style="font-size: 22;"></i></a>
+                </li>
+            </ul>
+            <p>
+            </p>
+            <p>Happy coding!</p>
+        </div>
+    </body>
+</html>

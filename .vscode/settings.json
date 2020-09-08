@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/3e66c004-5bd4-4597-807b-5a37afe6d52c/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/queen-web-app",
+    "appService.deploySubpath": "."
+}

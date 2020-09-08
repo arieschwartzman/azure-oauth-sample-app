@@ -1,0 +1,11 @@
+{
+    "auth":{
+        "tokenUri":"https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        "redirectUri" :"https://queen-web-app.azurewebsites.net/auth/azureadoauth2/callback",
+        "clientId":"e57d45a7-a3b8-4398-b460-f5bca4e5e2a6"
+    },
+    "keyvault":{
+        "uri":"https://moody-blues.vault.azure.net/",
+        "secretName":"queen-web-app-cert"
+    }    
+}
