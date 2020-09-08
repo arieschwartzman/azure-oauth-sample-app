@@ -13,7 +13,7 @@
             ],
             "program": "${workspaceFolder}/app.js",
             "env": {
-                "NODE_ENV": "dev-local"
+                "REDIRECT_URI": "http://localhost:3000/auth/azureadoauth2/callback"
             }
         }
     ]

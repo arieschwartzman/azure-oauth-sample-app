@@ -6,16 +6,15 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const KeyVaultSecret = require('@azure/keyvault-secrets');
 const identity = require('@azure/identity');
-const config = require('config');
-const morgan = require('morgan');
-
 const passport = require('passport');
 const AzureAdOAuth2CertStrategy  = require("passport-azure-ad-oauth2-clientcert");
-var graph = require('@microsoft/microsoft-graph-client');
+const assert = require('assert');
+const graph = require('@microsoft/microsoft-graph-client');
+
 require('isomorphic-fetch');
+require('dotenv').config();
 
 app.set('view engine', 'ejs');
-app.use(morgan('tiny'));
 
 app.use(session(
     {
@@ -56,15 +55,19 @@ async function initPassport(done) {
 
     // Get PEM from KV using system managed identity
     const credentials = new identity.DefaultAzureCredential();
-    const keyVaultClient = new KeyVaultSecret.SecretClient(config.get('keyvault.uri'), credentials);
+    assert(process.env.KEY_VAULT_URI,'KEY_VAULT_URI needs to be defined');
+    assert(process.env.CLIENT_ID,'CLIENT_ID needs to be defined');
+    assert(process.env.CLIENT_CERTIFICATE_NAME,'CLIENT_CERTIFICATE_NAME needs to be defined');
+
+    const keyVaultClient = new KeyVaultSecret.SecretClient(process.env.KEY_VAULT_URI, credentials);
     console.log('Reading PEM from KeyVault...');
-    const pem = await keyVaultClient.getSecret(config.get('keyvault.secretName'));    
+    const pem = await keyVaultClient.getSecret(process.env.CLIENT_CERTIFICATE_NAME);    
 
     passport.use(new AzureAdOAuth2CertStrategy({
         authorizationURL: 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
         tokenURL:'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-        clientID: config.get('auth.clientId'),
-        callbackURL: config.get('auth.redirectUri'),
+        clientID: process.env.CLIENT_ID,
+        callbackURL: process.env.REDIRECT_URI,
         pem: pem.value
     },
         function (accessToken, refresh_token, params, profile, done) {
