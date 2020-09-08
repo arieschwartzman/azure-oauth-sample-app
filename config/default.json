@@ -1,6 +1,6 @@
 {
     "auth":{
-        "redirectUri" :"https://azure-oauth-sample-app/auth/azureadoauth2/callback",
+        "redirectUri" :"https://azure-oauth-sample-app.azurewebsites.net/auth/azureadoauth2/callback",
         "clientId":"e57d45a7-a3b8-4398-b460-f5bca4e5e2a6"
     },
     "keyvault":{
