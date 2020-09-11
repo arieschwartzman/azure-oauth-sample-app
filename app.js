@@ -54,13 +54,13 @@ async function initPassport(done) {
     console.log('Initializing Passport...');
 
     // Get PEM from KV using system managed identity
-    const credentials = new identity.DefaultAzureCredential();
     assert(process.env.KEY_VAULT_URI,'KEY_VAULT_URI needs to be defined');
     assert(process.env.CLIENT_ID,'CLIENT_ID needs to be defined');
     assert(process.env.CLIENT_CERTIFICATE_NAME,'CLIENT_CERTIFICATE_NAME needs to be defined');
-
-    const keyVaultClient = new KeyVaultSecret.SecretClient(process.env.KEY_VAULT_URI, credentials);
+    
     console.log('Reading PEM from KeyVault...');
+    const credentials = new identity.DefaultAzureCredential();
+    const keyVaultClient = new KeyVaultSecret.SecretClient(process.env.KEY_VAULT_URI, credentials);
     const pem = await keyVaultClient.getSecret(process.env.CLIENT_CERTIFICATE_NAME);    
 
     passport.use(new AzureAdOAuth2CertStrategy({
