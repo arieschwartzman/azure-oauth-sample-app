@@ -7,7 +7,8 @@
 
 ## Running locally
 1. Clone this repo
-2. Create Key Vault resource and generate a certificate 
+2. npm install
+2. Create Key Vault resource and generate a certificate as described in this [blog post](https://nirvana.schwartzman.info/wordpress/2020/09/05/authenticate-using-client-certificate-and-system-managed-identity/)
 3. Register AAD Application and upload the public key as the authentication key
 4. Configure the .env file with the following values
 
@@ -18,6 +19,8 @@ REDIRECT_URI=http://localhost:3000/auth/azureadoauth2/callback
 CLIENT_CERTIFICATE_NAME=<cert-secret-name>
 ```
 5. Run the application
+
+
 
 
 
