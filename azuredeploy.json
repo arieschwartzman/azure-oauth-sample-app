@@ -31,13 +31,6 @@
                 "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
             }
         },
-        "numberOfInstances": {
-            "type": "int",
-            "defaultValue": 1,
-            "metadata": {
-                "description": "Number of instances the app service is scaled to. Check the maximum instances your plan can host at https://azure.microsoft.com/en-us/pricing/details/app-service"
-            }
-        },
         "siteLocation": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]",
@@ -81,10 +74,11 @@
     "variables": {
         "alwaysOn": true,
         "skuCode": "[parameters('skuName')]",
-        "numberOfWorkers": "[parameters('numberOfInstances')]",
+        "numberOfWorkers": 1,
         "linuxFxVersion": "NODE|lts",
         "hostingPlanNameLinux": "[concat('plan-linux-', parameters('siteName'))]",
         "hostingPlanNameWin": "[concat('plan-win-', parameters('siteName'))]",
+        "keyVaultName": "[concat('kv-', parameters('siteName'))]",
         "kind": "[if(equals(parameters('operatingSystem'), 'windows'), 'app', 'linux')]",
         "linuxSiteName": "[if(equals(parameters('operatingSystem'), 'linux'), parameters('siteName'), 'app-na')]",
         "windowsSiteName": "[if(equals(parameters('operatingSystem'), 'windows'), parameters('siteName'), 'app-na')]",
@@ -94,7 +88,9 @@
         "workerSizeId": "0",
         "hostingEnvironment": "",
         "nodeVersion": "12.13.0",
-        "currentStack": "node"
+        "currentStack": "node",
+        "windowsSiteNameResourceId": "[resourceId('Microsoft.Web/sites',variables('windowsSiteName'))]"
+
     },
     "resources": [
         {
@@ -178,6 +174,9 @@
             "type": "Microsoft.Web/sites",
             "location": "[parameters('siteLocation')]",
             "tags": null,
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "dependsOn": [
                 "[concat('Microsoft.Web/serverfarms/', variables('hostingPlanNameWin'))]"
             ],
@@ -252,6 +251,38 @@
             "sku": {
                 "Tier": "[variables('WinSku')]",
                 "Name": "[variables('WinSkuCode')]"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "name": "[variables('keyVaultName')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2016-10-01",
+            "properties": {
+                "enabledForDeployment": false,
+                "enabledForTemplateDeployment": false,
+                "enabledForDiskEncryption": false,
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": [
+                    {
+                        "tenantId": "[reference(variables('windowsSiteNameResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+                        "objectId": "[reference(variables('windowsSiteNameResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+                        "permissions": {
+                            "secrets": [
+                                "get",
+                                "list"
+                            ]
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "Standard",
+                    "family": "A"
+                },
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "bypass": "AzureServices"
+                }
             }
         }
     ]
