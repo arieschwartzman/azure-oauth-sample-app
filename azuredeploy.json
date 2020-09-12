@@ -4,7 +4,6 @@
     "parameters": {
         "siteName": {
             "type": "string",
-            "defaultValue": "[concat('healthcare-bot-', uniqueString(utcNow('F')))]",
             "metadata": {
                 "description": "Web site name. Has to be unique."
             }
@@ -22,7 +21,7 @@
         },
         "skuName": {
             "type": "string",
-            "defaultValue": "P1V2",
+            "defaultValue": "B1",
             "allowedValues": [
                 "B1",
                 "S1",
@@ -34,7 +33,7 @@
         },
         "numberOfInstances": {
             "type": "int",
-            "defaultValue": 2,
+            "defaultValue": 1,
             "metadata": {
                 "description": "Number of instances the app service is scaled to. Check the maximum instances your plan can host at https://azure.microsoft.com/en-us/pricing/details/app-service"
             }
@@ -46,21 +45,27 @@
                 "description": "Location for all resources."
             }
         },
-        "appSecret": {
-            "type": "securestring",
+        "clinetId": {
+            "type": "string",
             "metadata": {
-                "description": "Healthbot application secret."
+                "description": "Application registration client id."
             }
         },
-        "webchatSecret": {
-            "type": "securestring",
+        "keyvaultUri": {
+            "type": "string",
             "metadata": {
-                "description": "Healthbot webchat secret."
+                "description": "Key vault URI"
+            }
+        },
+        "clientCertificateName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the certificate as deployed in the keyvault"
             }
         },
         "repoUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/microsoft/HealthBotContainerSample.git",
+            "defaultValue": "https://github.com/arieschwartzman/azure-oauth-sample-app.git",
             "metadata": {
                 "description": "The URL for the GitHub repository that contains the project to deploy."
             }
@@ -97,6 +102,9 @@
             "name": "[variables('linuxSiteName')]",
             "condition": "[equals(parameters('operatingSystem'),'linux')]",
             "type": "Microsoft.Web/sites",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "location": "[parameters('siteLocation')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms/', variables('hostingPlanNameLinux'))]"
@@ -108,13 +116,22 @@
                     "alwaysOn": "[variables('alwaysOn')]",
                     "appSettings": [
                         {
-                            "name": "APP_SECRET",
-                            "value": "[parameters('appSecret')]"
+                            "name": "CLIENT_ID",
+                            "value": "[parameters('clinetId')]"
                         },
                         {
-                            "name": "WEBCHAT_SECRET",
-                            "value": "[parameters('webchatSecret')]"
+                            "name": "KEY_VAULT_URI",
+                            "value": "[parameters('keyvaultUri')]"
+                        },
+                        {
+                            "name": "CLIENT_CERTIFICATE_NAME",
+                            "value": "[parameters('clientCertificateName')]"
+                        },
+                        {
+                            "name": "REDIRECT_URI",
+                            "value": "[concat('https://',parameters('siteName'),'.azurewebsites.net/auth/azureadoauth2/callback')]"
                         }
+
                     ]
                 },
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanNameLinux'))]",
@@ -169,16 +186,20 @@
                 "siteConfig": {
                     "appSettings": [
                         {
-                            "name": "APP_SECRET",
-                            "value": "[parameters('appSecret')]"
+                            "name": "CLIENT_ID",
+                            "value": "[parameters('clinetId')]"
                         },
                         {
-                            "name": "WEBCHAT_SECRET",
-                            "value": "[parameters('webchatSecret')]"
+                            "name": "KEY_VAULT_URI",
+                            "value": "[parameters('keyvaultUri')]"
                         },
                         {
-                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                            "value": "[variables('nodeVersion')]"
+                            "name": "CLIENT_CERTIFICATE_NAME",
+                            "value": "[parameters('clientCertificateName')]"
+                        },
+                        {
+                            "name": "REDIRECT_URI",
+                            "value": "[concat('https://', parameters('siteName'),'.azurewebsites.net/auth/azureadoauth2/callback')]"
                         }
                     ],
                     "metadata": [
