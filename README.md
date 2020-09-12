@@ -1,5 +1,7 @@
 # azure-oauth-sample-app
 
+[![Deploy to Azure](https://azurecomcdn.azureedge.net/mediahandler/acomblog/media/Default/blog/deploybutton.png)](https://azuredeploy.net/)
+
 - Node.js/Express application that demonstrates federated authentication using AAD Application with Client Certificate stored in [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/overview) and accessed by a App Service using a [System Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview).
 
 - [Passport strategy](https://www.npmjs.com/package/passport-azure-ad-oauth2-clientcert) package is used to simplify the authentication flow with the support for client certificate
