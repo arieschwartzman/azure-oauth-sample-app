@@ -1,6 +1,6 @@
 # azure-oauth-sample-app
 
-[![Deploy to Azure](https://azurecomcdn.azureedge.net/mediahandler/acomblog/media/Default/blog/deploybutton.png)](https://azuredeploy.net/)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FHealthBotContainerSample%2Fmaster%2Fazuredeploy.json)
 
 - Node.js/Express application that demonstrates federated authentication using AAD Application with Client Certificate stored in [Azure Key Vault](https://docs.microsoft.com/en-us/azure/key-vault/general/overview) and accessed by a App Service using a [System Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview).
 
